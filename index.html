@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculator</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color:; /* Updated background color */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h2 {
+  color: #fff; /* Set text color to white */
+  background-color:; /* Set background color */
+  padding: 10px; /* Add padding for better visibility */
+  border-radius: 8px; /* Add rounded corners */
+  border-color:white;
+  animation: colorChange 2s infinite; /* Apply the colorChange animation */
+}
+
+@keyframes colorChange {
+  0% {
+    color: #3498db;
+  }
+  25% {
+    color: #e74c3c;
+  }
+  50% {
+    color: #2ecc71;
+  }
+  75% {
+    color: #f39c12;
+  }
+  100% {
+    color: #3498db; /* Back to the initial color */
+  }
+}
+
+    .container {
+      background: linear-gradient(to bottom, black, #2980b9);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      width: 300px;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+      transition: box-shadow 0.3s ease, transform 0.3s ease, background 0.5s ease;
+    }
+
+    .container:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transform: scale(1.02);
+    }
+
+    /* Add animations for container */
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      25%, 75% {
+        transform: translateX(-5px);
+      }
+      50% {
+        transform: translateX(5px);
+      }
+    }
+
+    /* Updated background color for buttons */
+    button {
+      width: 50px;
+      height: 50px;
+      font-size: 25px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+      background-color: #2ecc71; /* Updated button background color */
+      color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease, transform 0.2s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #27ae60; /* Updated hover background color */
+      color: #fff;
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Add animation for equals button */
+    button.equals {
+      background-color: #e74c3c;
+      color: #fff;
+      animation: pulse 0.8s infinite;
+    }
+
+    button.equals:hover {
+      background-color: #d32f2f;
+    }
+
+    /* Add animation for clear button */
+    button.clear {
+      background-color: #3498db;
+      color: #fff;
+    }
+
+    button.clear:hover {
+      background-color: #2980b9;
+    }
+
+    /* Add transition for all buttons */
+    button {
+      transition: transform 0.2s ease, background-color 0.3s ease;
+    }
+
+    button:active {
+      transform: scale(0.95);
+      animation: bounce 0.3s ease;
+    }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .row button {
+      flex-grow: 1;
+    }
+
+    #result {
+      width: 100%;
+      color:white;
+      margin-bottom: 10px;
+      padding: 15px;
+      font-size: 24px;
+      border: 1px solid white;
+      border-radius: 8px;
+      box-sizing: border-box;
+      transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Calculator</h2>
+    <input type="text" id="result" disabled><br><br>
+    <div class="row">
+      <button id="btn7">7</button>
+      <button id="btn8">8</button>
+      <button id="btn9">9</button>
+      <button id="btnDivide" class="operator">/</button>
+    </div>
+    <div class="row">
+      <button id="btn4">4</button>
+      <button id="btn5">5</button>
+      <button id="btn6">6</button>
+      <button id="btnMultiply" class="operator">*</button>
+    </div>
+    <div class="row">
+      <button id="btn1">1</button>
+      <button id="btn2">2</button>
+      <button id="btn3">3</button>
+      <button id="btnMinus" class="operator">-</button>
+    </div>
+    <div class="row">
+      <button id="btn0">0</button>
+      <button id="btnClear" class="clear">C</button>
+      <button id="btnEquals" class="equals">=</button>
+      <button id="btnPlus" class="operator">+</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const resultField = document.getElementById('result');
+      const buttons = document.querySelectorAll('button');
+
+      buttons.forEach(button => {
+        button.addEventListener('click', () => handleButtonClick(button.innerText));
+      });
+
+      function handleButtonClick(value) {
+        if (value === '=') {
+          calculate();
+        } else if (value === 'C') {
+          clearResult();
+        } else {
+          resultField.value += value;
+        }
+      }
+
+      function calculate() {
+        try {
+          const result = eval(resultField.value);
+          if (isNaN(result) || !isFinite(result)) {
+            throw new Error('Invalid operation');
+          }
+          resultField.value = result;
+        } catch (error) {
+          resultField.value = 'Error';
+          document.querySelector('.container').style.animation = 'shake 0.5s';
+          setTimeout(() => {
+            document.querySelector('.container').style.animation = '';
+          }, 500);
+        }
+      }
+
+      function clearResult() {
+        resultField.value = '';
+      }
+    });
+  </script>
+</body>
+</html>
